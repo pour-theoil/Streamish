@@ -75,8 +75,7 @@ namespace Streamish.Repositories
                         
                             FROM Video v 
                             JOIN UserProfile up ON v.UserProfileId = up.Id
-                            ORDER BY DateCreated
-                            WHERE Id = @Id";
+                            WHERE V.Id = @Id";
 
                     DbUtils.AddParameter(cmd, "@Id", id);
 
