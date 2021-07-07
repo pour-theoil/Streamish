@@ -24,7 +24,7 @@ namespace Streamish.Repositories
                 {
 
                     cmd.CommandText = @"
-                                    Select Id, Name, Email, Bio, ImageUrl, DateCreated
+                                    Select Id, Name, Email, ImageUrl, DateCreated
                                     from UserProfile";
 
                     var reader = cmd.ExecuteReader();
@@ -56,11 +56,11 @@ namespace Streamish.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                                    Select u.[Name], u.Email, u.Bio, u.ImageUrl, u.DateCreated,
-                                    p.id as VideoId, P.Title, P.Caption, P.DateCreated as VideoDateCreated, P.ImageUrl as VideoURL,
+                                    Select u.[Name], u.Email, u.ImageUrl, u.DateCreated,
+                                    v.id as VideoId, v.Title, v.Description, v.DateCreated as VideoDateCreated, v.Url as VideoURL,
                                     c.Id AS CommentId, c.Message, c.UserProfileId AS CommentUserProfileId
-                                    from UserProfile u left join Video p on u.Id = p.UserProfileId
-                                    left join Comment c on c.VideoId = p.id
+                                    from UserProfile u left join Video v on u.Id = p.UserProfileId
+                                    left join Comment c on c.VideoId = v.id
                                     where u.Id = @Id";
                     DbUtils.AddParameter(cmd, "@Id", id);
 
@@ -84,22 +84,22 @@ namespace Streamish.Repositories
 
                         if (DbUtils.IsNotDbNull(reader, "VideoId"))
                         {
-                            Video post = null;
-                            if (post == null)
+                            Video video = null;
+                            if (video == null)
                             {
-                                post = new Video()
+                                video = new Video()
                                 {
                                     Id = DbUtils.GetInt(reader, "VideoId"),
                                     Title = DbUtils.GetString(reader, "Title"),
-                                    Caption = DbUtils.GetString(reader, "Caption"),
+                                    Description = DbUtils.GetString(reader, "Description"),
                                     DateCreated = DbUtils.GetDateTime(reader, "VideoDateCreated"),
-                                    ImageUrl = DbUtils.GetString(reader, "VideoURL"),
+                                    Url = DbUtils.GetString(reader, "VideoURL"),
                                     Comments = new List<Comment>()
                                 };
                             }
                             if (DbUtils.IsNotDbNull(reader, "CommentId"))
                             {
-                                post.Comments.Add(new Comment()
+                                video.Comments.Add(new Comment()
                                 {
                                     Id = DbUtils.GetInt(reader, "CommentId"),
                                     Message = DbUtils.GetString(reader, "Message"),
@@ -108,7 +108,7 @@ namespace Streamish.Repositories
 
                                 });
                             }
-                            userProfile.Videos.Add(post);
+                            userProfile.Videos.Add(video);
                         };
 
 
@@ -126,9 +126,9 @@ namespace Streamish.Repositories
                 conn.Open();
                 using (var cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = @"Insert into UserProfile ([Name], Email, DateCreated, ImageUrl, Bio) 
+                    cmd.CommandText = @"Insert into UserProfile ([Name], Email, DateCreated, ImageUrl)
                                         output inserted.Id
-                                        values (@name, @Email, @DateCreated, @ImageUrl, @Bio);";
+                                        values (@name, @Email, @DateCreated, @ImageUrl);";
 
                     DbUtils.AddParameter(cmd, "@name", userProfile.Name);
                     DbUtils.AddParameter(cmd, "@Email", userProfile.Email);
@@ -153,7 +153,7 @@ namespace Streamish.Repositories
                                Email = @Email,
                                DateCreated = @DateCreated,
                                ImageUrl = @ImageUrl,
-                               Bio = @Bio
+                               
                          WHERE Id = @Id";
 
                     DbUtils.AddParameter(cmd, "@Name", userProfile.Name);
