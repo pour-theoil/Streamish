@@ -32,7 +32,7 @@ namespace Streamish.Tests.Mocks
 
         public void Delete(int id)
         {
-            var videoToDelete = _data.FirstOrDefault(p => p.Id == id);
+            var videoToDelete = _data.FirstOrDefault(v => v.Id == id);
             if (videoToDelete == null)
             {
                 return;
@@ -68,7 +68,8 @@ namespace Streamish.Tests.Mocks
 
         public List<Video> Search(string criterion, bool sortDescending)
         {
-            throw new NotImplementedException();
+            var criterionlower = criterion.ToLower();
+            return _data.FindAll(v => v.Title.ToLower().Contains(criterionlower));
         }
 
         public List<Video> GetAllWithComments()
@@ -79,6 +80,11 @@ namespace Streamish.Tests.Mocks
         public Video GetVideoByIdWithComments(int id)
         {
             throw new NotImplementedException();
+        }
+
+        public List<Video> Since(DateTime criterion)
+        {
+            return _data.FindAll(v => v.DateCreated > criterion);
         }
     }
 }
