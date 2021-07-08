@@ -152,7 +152,7 @@ namespace Streamish.Repositories
                            SET [Name] = @Name,
                                Email = @Email,
                                DateCreated = @DateCreated,
-                               ImageUrl = @ImageUrl,
+                               ImageUrl = @ImageUrl
                                
                          WHERE Id = @Id";
 

@@ -4,7 +4,7 @@ using Streamish.Repositories;
 using Streamish.Models;
 
 
-namespace Gifter.Controllers
+namespace Streamish.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

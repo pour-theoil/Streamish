@@ -179,6 +179,50 @@ namespace Streamish.Tests
             Assert.Null(videoFromDb);
         }
 
+        [Fact]
+        public void Test_Since_Method_With_Criterion()
+        {
+            //Arrange
+            
+            var videos = CreateTestVideos(10);
+            var videocount = 2;
+
+            var repo = new InMemoryVideoRepository(videos);
+            var controler = new VideoController(repo);
+
+            //Act
+            var result = controler.Since(DateTime.Today.AddDays(-3));
+
+            //Assert
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            var actualvideos = Assert.IsType<List<Video>>(okResult.Value);
+
+            Assert.Equal(videocount, actualvideos.Count);
+            //Assert.NotInRange(actualvideos)
+        }
+
+        [Fact]
+        public void Test_Search_Method_With_String_Criterion()
+        {
+            //Arrange
+            var matchingvideos = 1;
+            var videos = CreateTestVideos(10);
+            videos[0].Title = "Lost World";
+
+            var repo = new InMemoryVideoRepository(videos);
+            var controler = new VideoController(repo);
+
+            //Act
+            var result = controler.Search("Lost", true);
+
+            //Assert
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            var actualvideos = Assert.IsType<List<Video>>(okResult.Value);
+
+            Assert.Equal(matchingvideos, actualvideos.Count);
+            //Assert.NotInRange(actualvideos)
+        }
+
         private List<Video> CreateTestVideos(int count)
         {
             var videos = new List<Video>();
@@ -209,5 +253,8 @@ namespace Streamish.Tests
                 ImageUrl = $"http://user.url/{id}",
             };
         }
+
+
     }
 }
+
