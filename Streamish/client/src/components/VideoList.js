@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import Video from './Video';
-import AddVideo from './VideoForm';
 import { getAllVideos, searchVideo } from "../modules/videoManager";
 
 const VideoList = () => {
@@ -45,7 +44,6 @@ const VideoList = () => {
         />
         <button type="submit" onClick={searchVideos}>Search</button>
     </form>
-      <AddVideo getvids={getVideos}/>
       <div className="row justify-content-center">
         {videos.map((video) => (
           <Video video={video} key={video.id} />
