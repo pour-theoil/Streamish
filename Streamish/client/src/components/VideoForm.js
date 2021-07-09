@@ -1,12 +1,16 @@
 import React, { useState } from 'react'
+import { useHistory } from 'react-router'
 import { addVideo } from '../modules/videoManager'
 
-const AddVideo = ({getvids}) => {
-    const [video, setVideo] = useState({
+
+const AddVideo = () => {
+    const emptyVideo = {
         Title: "",
         Description: "",
         Url: ""
-    })
+    }
+    const history = useHistory();
+    const [video, setVideo] = useState({emptyVideo})
     
     const handleInputChange = (event) => {
         const newVideo = {...video};
@@ -18,7 +22,10 @@ const AddVideo = ({getvids}) => {
         click.preventDefault()
         if (video.Title === "" || video.url === "" ) {
             window.alert("Please fill in all fields")
-        } else {addVideo(video).then(()=>getvids())}
+        } else {addVideo(video).then((p) => {
+            // Navigate the user back to the home route
+            history.push("/");
+        });}  
         
     }
     return (
