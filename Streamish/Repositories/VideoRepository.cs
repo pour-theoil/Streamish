@@ -373,15 +373,16 @@ namespace Streamish.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                        INSERT INTO Video (Title, Description, DateCreated, Url, UserProfileId)
+                        INSERT INTO Video (Title, Description, DateCreated, Url, UserProfileId, VideoPlayerId)
                         OUTPUT INSERTED.ID
-                        VALUES (@Title, @Description, @DateCreated, @Url, @UserProfileId)";
+                        VALUES (@Title, @Description, @DateCreated, @Url, @UserProfileId, @VideoPlayerId)";
 
                     DbUtils.AddParameter(cmd, "@Title", video.Title);
                     DbUtils.AddParameter(cmd, "@Description", video.Description);
                     DbUtils.AddParameter(cmd, "@DateCreated", video.DateCreated);
                     DbUtils.AddParameter(cmd, "@Url", video.Url);
                     DbUtils.AddParameter(cmd, "@UserProfileId", video.UserProfileId);
+                    DbUtils.AddParameter(cmd, "@VideoPlayerId", video.videoPlayerId);
 
                     video.Id = (int)cmd.ExecuteScalar();
                 }
@@ -401,7 +402,8 @@ namespace Streamish.Repositories
                                Description = @Description,
                                DateCreated = @DateCreated,
                                Url = @Url,
-                               UserProfileId = @UserProfileId
+                               UserProfileId = @UserProfileId,
+                               VideoPlayerId = @VideoPlayerId
                          WHERE Id = @Id";
 
                     DbUtils.AddParameter(cmd, "@Title", video.Title);
@@ -410,7 +412,7 @@ namespace Streamish.Repositories
                     DbUtils.AddParameter(cmd, "@Url", video.Url);
                     DbUtils.AddParameter(cmd, "@UserProfileId", video.UserProfileId);
                     DbUtils.AddParameter(cmd, "@Id", video.Id);
-
+                    DbUtils.AddParameter(cmd, "@VideoPlayerId", video.videoPlayerId);
                     cmd.ExecuteNonQuery();
                 }
             }
