@@ -23,5 +23,8 @@ namespace Streamish.Models
         public UserProfile UserProfile { get; set; }
 
         public List<Comment> Comments { get; set; }
+        public int videoPlayerId { get; set; }
+
+        public VideoPlayer VideoPlayer { get; set; }
     }
 }
