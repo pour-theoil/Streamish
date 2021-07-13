@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Streamish.Models
 {
@@ -26,5 +28,7 @@ namespace Streamish.Models
         public int videoPlayerId { get; set; }
 
         public VideoPlayer VideoPlayer { get; set; }
+
+      
     }
 }
