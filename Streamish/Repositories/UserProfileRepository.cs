@@ -189,10 +189,10 @@ namespace Streamish.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                        SELECT up.Id, Up.FirebaseUserId, up.Name AS UserProfileName, up.Email, up.UserTypeId,
-                               ut.Name AS UserTypeName
-                          FROM UserProfile up
-                               LEFT JOIN UserType ut on up.UserTypeId = ut.Id
+                        SELECT Id, FirebaseUserId, Name AS UserProfileName, Email,
+                              
+                          FROM UserProfile 
+                               
                          WHERE FirebaseUserId = @FirebaseuserId";
 
                     DbUtils.AddParameter(cmd, "@FirebaseUserId", firebaseUserId);
