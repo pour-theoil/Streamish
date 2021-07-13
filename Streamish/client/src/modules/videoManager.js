@@ -23,3 +23,13 @@ export const searchVideo = (criteria, order) => {
 export const getVideo = (id) => {
   return fetch(`${baseUrl}/${id}`).then((res) => res.json());
 };
+
+export const uploadvideo = (file) => {
+  return fetch(`${baseUrl}/upload`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "multipart/form-data"
+    },
+    body: file
+  }).then((res) => res.json())
+}

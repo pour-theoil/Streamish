@@ -13,7 +13,9 @@ namespace Streamish.Repositories
         public void Add(UserProfile userProfile);
         public void Update(UserProfile userProfile);
         public void Delete(int id);
+        public UserProfile GetByFirebaseUserId(string firebaseUserId);
 
-       
+
+
     }
 }

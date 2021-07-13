@@ -2,7 +2,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Streamish.Repositories;
 using Streamish.Models;
-
+using Microsoft.AspNetCore.Http;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Streamish.Controllers
 {
@@ -34,7 +37,7 @@ namespace Streamish.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post(Video video)
+        public async Task<IActionResult> Post(Video video)
         {
             // NOTE: This is only temporary to set the UserProfileId until we implement login
             // TODO: After we implement login, use the id of the current user
@@ -58,9 +61,12 @@ namespace Streamish.Controllers
 
                 // An embeddable Video URL looks something like this:
                 //  https://www.youtube.com/embed/sstOXCQ-EG0
-
+                if (video.Url != null)
+                {
+                
+                }
                 // If this isn't a YouTube video, we should just give up
-                if (video.Url.Contains("youtube"))
+                else if (video.Url.Contains("youtube"))
                 {
                     // If it's not already an embeddable URL, we have some work to do
                     if (!video.Url.Contains("embed"))
@@ -71,8 +77,8 @@ namespace Streamish.Controllers
                     }
                     return BadRequest();
                 }
-                
-                if (video.Url.Contains("vimeo"))
+
+                else if (video.Url.Contains("vimeo"))
                 {
                     var videoCode = video.Url.Split(".com/")[1];
                     video.Url = $"https://player.vimeo.com/video/{videoCode}";
@@ -138,6 +144,19 @@ namespace Streamish.Controllers
         public IActionResult Since(DateTime since)
         {
             return Ok(_videoRepository.Since(since));
+        }
+
+        [HttpPost("upload")]
+        public async Task<string> SaveVideo(IFormFile videoFile)
+        {
+            string videoName = new String(Path.GetFileNameWithoutExtension(videoFile.FileName).Take(10).ToArray()).Replace(' ', '-');
+            videoName = videoName + DateTime.Now.ToString("yymmssfff") + Path.GetExtension(videoFile.FileName);
+            var videoPath = Path.Combine("~/Images", videoName);
+            using (var filestream = new FileStream(videoPath, FileMode.Create))
+            {
+                await videoFile.CopyToAsync(filestream);
+            }
+            return videoName;
         }
     }
 }
